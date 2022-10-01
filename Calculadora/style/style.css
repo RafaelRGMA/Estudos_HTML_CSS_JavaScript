@@ -1,0 +1,64 @@
+@charset "UTF-8";
+
+.calculadora {
+    height: 600px;
+    width: 400px;
+    border-radius: 15px;
+    margin: auto;
+    background-color: rgb(100, 98, 98);
+    padding: 10px;
+}
+
+/*======================CONFIGURAÇÕES DA GRADE===================================================*/
+#grid-calculadora{
+    display: grid;
+    grid-template-columns: 70px 70px 70px; /*Define o número de colunas e o tamanho*/
+    grid-template-rows: 60px 60px 60px 60px 60px 60px; /*Define o número de linhas e o tamanho*/
+    column-gap: 10px; /*Distância entre colunas*/
+    row-gap: 10px; /*Distância entre linhas*/
+    margin-left: 20px;
+}
+
+.display{
+    grid-column: 1/span 3; /*Em qual número da célula que o elemento vai ocupar / número da última célula*/
+}
+
+#soma{
+    grid-row-start: 5;
+    grid-row-end: 6;
+}
+
+
+/*================================================================================================*/
+
+
+#display-screen{    
+    width: 350px;
+    height: 50px;
+    box-shadow: 5px 5px black;
+    text-align: right;
+    font-size: larger;
+}
+
+.numeric{
+    height: 52px;
+}
+
+.numeric-button{
+    border-radius: 5px;
+    width: 65px;
+    height: 50px;
+    font-size: larger;
+}
+
+.operation-button{
+    border-radius: 5px;
+    width: 65px;
+    height: 50px;
+    font-size: larger;
+    background-color: rgb(163, 162, 162);
+}
+
+#soma{
+    height: 120px;
+}
