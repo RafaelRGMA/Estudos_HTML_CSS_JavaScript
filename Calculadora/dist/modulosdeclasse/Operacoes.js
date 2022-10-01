@@ -13,4 +13,12 @@ export class Operacoes {
         this._resultado += valor;
         this.memoria = "";
     }
+    multiplicaValor(valor) {
+        this._resultado *= valor;
+        this.memoria = "";
+    }
+    divideValor(valor) {
+        this._resultado /= valor;
+        this.memoria = "";
+    }
 }

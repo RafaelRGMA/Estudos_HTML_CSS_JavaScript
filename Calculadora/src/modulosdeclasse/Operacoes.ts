@@ -15,8 +15,18 @@ export class Operacoes{
     }
 
 
-    somaValor(valor:number){
+    somaValor(valor:number):void{
         this._resultado += valor;
+        this.memoria = "";
+    }
+
+    multiplicaValor(valor:number):void{
+        this._resultado *= valor;
+        this.memoria = "";
+    }
+
+    divideValor(valor:number):void{
+        this._resultado /= valor;
         this.memoria = "";
     }
    

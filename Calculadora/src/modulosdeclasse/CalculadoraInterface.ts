@@ -6,6 +6,8 @@ export class CalculadoraInterface{
     private _btnSoma:HTMLButtonElement;
     private _btnSubtracao:HTMLButtonElement;
     private _btnIgual:HTMLButtonElement;
+    private _btnMultiplicacao:HTMLButtonElement;
+    private _btnDivisao:HTMLButtonElement;
     private _inputNumerico:boolean = false;
     private _ultimaOperacao:string = ""
     private _operacoes:Operacoes;
@@ -15,10 +17,14 @@ export class CalculadoraInterface{
         this._display = document.querySelector("#display-screen");
         this._btnSoma = document.querySelector("#soma");
         this._btnSubtracao = document.querySelector("#subtracao");
+        this._btnMultiplicacao = document.querySelector("#multiplicacao");
+        this._btnDivisao = document.querySelector("#divizao");
         this._btnIgual = document.querySelector("#igual");
         this._ativarBotoesNumericos();
         this._ativarBotaoSoma();
         this._ativarBotaoSubtracao();
+        this._ativarBotaoMultiplicacao();
+        this._ativarBotaoDivisao();
         this._ativarBotaoIgual();
     }
 
@@ -51,9 +57,12 @@ export class CalculadoraInterface{
 
     private _ativarBotaoSoma():void{
         this._btnSoma.addEventListener("click", ()=>{
-            if(this._inputNumerico && this._ultimaOperacao != "="){
+            if(this._inputNumerico && (this._ultimaOperacao != "x" && this._ultimaOperacao != "=")){
                 this._operacoes.somaValor(this._retornaValorDisplay());
+            }else if(this._inputNumerico && this._ultimaOperacao == "x"){
+                this._operacoes.multiplicaValor(this._retornaValorDisplay());
             }
+
             this._display.value = this._operacoes.resultado.toString().replace(".", ",");          
             this._inputNumerico = false;
             this._ultimaOperacao = "+";
@@ -62,9 +71,11 @@ export class CalculadoraInterface{
 
     private _ativarBotaoSubtracao():void{
         this._btnSubtracao.addEventListener("click", ()=>{
-            if(this._inputNumerico && this._ultimaOperacao != "="){
+            if(this._inputNumerico && (this._ultimaOperacao != "x" && this._ultimaOperacao != "=")){
                 this._operacoes.somaValor(this._retornaValorDisplay());
-            }
+            }else if(this._inputNumerico && this._ultimaOperacao == "x"){
+                this._operacoes.multiplicaValor(this._retornaValorDisplay());
+            }    
 
             this._operacoes.memoria = this._btnSubtracao.innerHTML;
             this._display.value = this._operacoes.resultado.toString().replace(".", ",");          
@@ -73,10 +84,29 @@ export class CalculadoraInterface{
         });
     }
 
+    private _ativarBotaoMultiplicacao():void{
+        this._btnMultiplicacao.addEventListener("click", ()=>{
+            if(this._ultimaOperacao != "x" && this._ultimaOperacao != "="){
+                this._operacoes.somaValor(this._retornaValorDisplay());
+            }else if(this._inputNumerico && this._ultimaOperacao == "x"){
+                this._operacoes.multiplicaValor(this._retornaValorDisplay());
+            }    
+            this._display.value = this._operacoes.resultado.toString().replace(".", ",");          
+            this._inputNumerico = false;
+            this._ultimaOperacao = "x"
+        });
+    }
+
+    private _ativarBotaoDivisao():void{
+        
+    }
+
     private _ativarBotaoIgual():void{
         this._btnIgual.addEventListener('click', ()=>{
-            if(this._inputNumerico){
+            if(this._inputNumerico && (this._ultimaOperacao == "+" || this._ultimaOperacao == "-")){
                 this._operacoes.somaValor(this._retornaValorDisplay());
+            }else if(this._inputNumerico && this._ultimaOperacao == "x"){
+                this._operacoes.multiplicaValor(this._retornaValorDisplay());
             }
 
             this._display.value = this._operacoes.resultado.toString().replace(".", ",");
