@@ -12,6 +12,7 @@ export class CalculadoraInterface{
     private _inputNumerico:boolean = false;
     private _ultimaOperacao:string = ""
     private _operacoes:Operacoes;
+    
     constructor(){
         this._operacoes = new Operacoes();
         this._arrayBtnNum = this._botoesNumericos();
@@ -72,10 +73,12 @@ export class CalculadoraInterface{
 
 //======CONFIGURAÇÃO DO BOTÃO SOMAR========================================================================
     private _somar():void{
-        if(this._inputNumerico && (this._ultimaOperacao != "x" && this._ultimaOperacao != "=")){
+        if(this._inputNumerico && (this._ultimaOperacao != "x" && this._ultimaOperacao != "=" && this._ultimaOperacao != "/")){
             this._operacoes.somaValor(this._retornaValorDisplay());
         }else if(this._inputNumerico && this._ultimaOperacao == "x"){
             this._operacoes.multiplicaValor(this._retornaValorDisplay());
+        }else if(this._inputNumerico && this._ultimaOperacao == "/"){
+            this._operacoes.multiplicaValor(1/this._retornaValorDisplay());
         }
 
         this._display.value = this._operacoes.resultado.toString().replace(".", ",");          
@@ -99,11 +102,13 @@ export class CalculadoraInterface{
 
 //======CONFIGURAÇÃO DO BOTÃO SUBTRAIR=============================================================================
     private _subtrair():void{
-        if(this._inputNumerico && (this._ultimaOperacao != "x" && this._ultimaOperacao != "=")){
+        if(this._inputNumerico && (this._ultimaOperacao != "x" && this._ultimaOperacao != "=" && this._ultimaOperacao != "/")){
             this._operacoes.somaValor(this._retornaValorDisplay());
         }else if(this._inputNumerico && this._ultimaOperacao == "x"){
             this._operacoes.multiplicaValor(this._retornaValorDisplay());
-        }    
+        }else if(this._inputNumerico && this._ultimaOperacao == "/"){
+            this._operacoes.multiplicaValor(1/this._retornaValorDisplay());
+        }   
 
         this._operacoes.memoria = this._btnSubtracao.innerHTML;
         this._display.value = this._operacoes.resultado.toString().replace(".", ",");          
@@ -127,11 +132,14 @@ export class CalculadoraInterface{
 
 //=========CONFIGURAÇÃO DO BOTÃO MULTIPLICAR=======================================================================
     private _multiplicar():void{
-        if(this._ultimaOperacao != "x" && this._ultimaOperacao != "="){
+        if(this._ultimaOperacao != "x" && this._ultimaOperacao != "/" && this._ultimaOperacao != "="){
             this._operacoes.somaValor(this._retornaValorDisplay());
         }else if(this._inputNumerico && this._ultimaOperacao == "x"){
             this._operacoes.multiplicaValor(this._retornaValorDisplay());
-        }    
+        }else if(this._inputNumerico && this._ultimaOperacao == "/"){
+            this._operacoes.multiplicaValor(1/this._retornaValorDisplay());
+        }
+
         this._display.value = this._operacoes.resultado.toString().replace(".", ",");          
         this._inputNumerico = false;
         this._ultimaOperacao = "x";
@@ -153,8 +161,28 @@ export class CalculadoraInterface{
 
 
 //===============CONFIGURAÇÃO DO BOTÃO DIVIDIR======================================================================
+    private _dividir():void{
+        if(this._ultimaOperacao != "/" && this._ultimaOperacao != "=" && this._ultimaOperacao != "x"){
+            this._operacoes.somaValor(this._retornaValorDisplay());
+        }else if(this._inputNumerico && this._ultimaOperacao == "x"){
+            this._operacoes.multiplicaValor(this._retornaValorDisplay());
+        }else if(this._inputNumerico && this._ultimaOperacao == "/"){
+            this._operacoes.multiplicaValor(1/this._retornaValorDisplay());
+        }    
+        this._display.value = this._operacoes.resultado.toString().replace(".", ",");          
+        this._inputNumerico = false;
+        this._ultimaOperacao = "/";
+    }
+
     private _ativarBotaoDivisao():void{
-            
+        this._btnDivisao.addEventListener("click", ()=>{
+            this._dividir();
+        });
+        document.addEventListener("keypress", (event)=>{
+            if(event.key == "/"){
+                this._dividir();
+            }
+        });      
     }
 //===============CONFIGURAÇÃO DO BOTÃO IGUAL========================================================================
 
@@ -163,6 +191,8 @@ export class CalculadoraInterface{
             this._operacoes.somaValor(this._retornaValorDisplay());
         }else if(this._inputNumerico && this._ultimaOperacao == "x"){
             this._operacoes.multiplicaValor(this._retornaValorDisplay());
+        }else if(this._inputNumerico && this._ultimaOperacao == "/"){
+            this._operacoes.multiplicaValor(1/this._retornaValorDisplay());
         }
 
         this._display.value = this._operacoes.resultado.toString().replace(".", ",");
@@ -182,20 +212,17 @@ export class CalculadoraInterface{
     }
 //===================================================================================================================
 
-//========CONFIGURAÇÃO DO BOTÃO LIMPAR===============================================================================
+    private _retornaValorDisplay():any{
+        return (this._display.value.search(/[,]/) == -1)?parseInt(this._display.value):parseFloat(this._display.value.replace(",","."));
+    }
 
     private _ativarBotaoLimpar():void{
         this._btnLimpar.addEventListener("click", ()=>{
-            this._display.value = "0";
-            this._operacoes.memoria = "";
             this._operacoes.limparResultado();
-            this._inputNumerico = false;
+            this._operacoes.memoria = "";
+            this._display.value = "0";
             this._ultimaOperacao = "";
+            this._inputNumerico = false;
         });
-    }
-
-//===================================================================================================================  
-    private _retornaValorDisplay():any{
-        return (this._display.value.search(/[,]/) == -1)?parseInt(this._display.value):parseFloat(this._display.value.replace(",","."));
     }
 }

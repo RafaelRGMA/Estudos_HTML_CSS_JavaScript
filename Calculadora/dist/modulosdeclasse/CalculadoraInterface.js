@@ -54,11 +54,14 @@ export class CalculadoraInterface {
     //=========================================================================================================
     //======CONFIGURAÇÃO DO BOTÃO SOMAR========================================================================
     _somar() {
-        if (this._inputNumerico && (this._ultimaOperacao != "x" && this._ultimaOperacao != "=")) {
+        if (this._inputNumerico && (this._ultimaOperacao != "x" && this._ultimaOperacao != "=" && this._ultimaOperacao != "/")) {
             this._operacoes.somaValor(this._retornaValorDisplay());
         }
         else if (this._inputNumerico && this._ultimaOperacao == "x") {
             this._operacoes.multiplicaValor(this._retornaValorDisplay());
+        }
+        else if (this._inputNumerico && this._ultimaOperacao == "/") {
+            this._operacoes.multiplicaValor(1 / this._retornaValorDisplay());
         }
         this._display.value = this._operacoes.resultado.toString().replace(".", ",");
         this._inputNumerico = false;
@@ -77,11 +80,14 @@ export class CalculadoraInterface {
     //=================================================================================================================
     //======CONFIGURAÇÃO DO BOTÃO SUBTRAIR=============================================================================
     _subtrair() {
-        if (this._inputNumerico && (this._ultimaOperacao != "x" && this._ultimaOperacao != "=")) {
+        if (this._inputNumerico && (this._ultimaOperacao != "x" && this._ultimaOperacao != "=" && this._ultimaOperacao != "/")) {
             this._operacoes.somaValor(this._retornaValorDisplay());
         }
         else if (this._inputNumerico && this._ultimaOperacao == "x") {
             this._operacoes.multiplicaValor(this._retornaValorDisplay());
+        }
+        else if (this._inputNumerico && this._ultimaOperacao == "/") {
+            this._operacoes.multiplicaValor(1 / this._retornaValorDisplay());
         }
         this._operacoes.memoria = this._btnSubtracao.innerHTML;
         this._display.value = this._operacoes.resultado.toString().replace(".", ",");
@@ -101,11 +107,14 @@ export class CalculadoraInterface {
     //=================================================================================================================
     //=========CONFIGURAÇÃO DO BOTÃO MULTIPLICAR=======================================================================
     _multiplicar() {
-        if (this._ultimaOperacao != "x" && this._ultimaOperacao != "=") {
+        if (this._ultimaOperacao != "x" && this._ultimaOperacao != "/" && this._ultimaOperacao != "=") {
             this._operacoes.somaValor(this._retornaValorDisplay());
         }
         else if (this._inputNumerico && this._ultimaOperacao == "x") {
             this._operacoes.multiplicaValor(this._retornaValorDisplay());
+        }
+        else if (this._inputNumerico && this._ultimaOperacao == "/") {
+            this._operacoes.multiplicaValor(1 / this._retornaValorDisplay());
         }
         this._display.value = this._operacoes.resultado.toString().replace(".", ",");
         this._inputNumerico = false;
@@ -124,7 +133,29 @@ export class CalculadoraInterface {
     }
     //==================================================================================================================
     //===============CONFIGURAÇÃO DO BOTÃO DIVIDIR======================================================================
+    _dividir() {
+        if (this._ultimaOperacao != "/" && this._ultimaOperacao != "=" && this._ultimaOperacao != "x") {
+            this._operacoes.somaValor(this._retornaValorDisplay());
+        }
+        else if (this._inputNumerico && this._ultimaOperacao == "x") {
+            this._operacoes.multiplicaValor(this._retornaValorDisplay());
+        }
+        else if (this._inputNumerico && this._ultimaOperacao == "/") {
+            this._operacoes.multiplicaValor(1 / this._retornaValorDisplay());
+        }
+        this._display.value = this._operacoes.resultado.toString().replace(".", ",");
+        this._inputNumerico = false;
+        this._ultimaOperacao = "/";
+    }
     _ativarBotaoDivisao() {
+        this._btnDivisao.addEventListener("click", () => {
+            this._dividir();
+        });
+        document.addEventListener("keypress", (event) => {
+            if (event.key == "/") {
+                this._dividir();
+            }
+        });
     }
     //===============CONFIGURAÇÃO DO BOTÃO IGUAL========================================================================
     _totalizar() {
@@ -133,6 +164,9 @@ export class CalculadoraInterface {
         }
         else if (this._inputNumerico && this._ultimaOperacao == "x") {
             this._operacoes.multiplicaValor(this._retornaValorDisplay());
+        }
+        else if (this._inputNumerico && this._ultimaOperacao == "/") {
+            this._operacoes.multiplicaValor(1 / this._retornaValorDisplay());
         }
         this._display.value = this._operacoes.resultado.toString().replace(".", ",");
         this._ultimaOperacao = "=";
@@ -148,18 +182,16 @@ export class CalculadoraInterface {
         });
     }
     //===================================================================================================================
-    //========CONFIGURAÇÃO DO BOTÃO LIMPAR===============================================================================
-    _ativarBotaoLimpar() {
-        this._btnLimpar.addEventListener("click", () => {
-            this._display.value = "0";
-            this._operacoes.memoria = "";
-            this._operacoes.limparResultado();
-            this._inputNumerico = false;
-            this._ultimaOperacao = "";
-        });
-    }
-    //===================================================================================================================  
     _retornaValorDisplay() {
         return (this._display.value.search(/[,]/) == -1) ? parseInt(this._display.value) : parseFloat(this._display.value.replace(",", "."));
+    }
+    _ativarBotaoLimpar() {
+        this._btnLimpar.addEventListener("click", () => {
+            this._operacoes.limparResultado();
+            this._operacoes.memoria = "";
+            this._display.value = "0";
+            this._ultimaOperacao = "";
+            this._inputNumerico = false;
+        });
     }
 }
